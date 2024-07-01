@@ -1,0 +1,37 @@
+{
+    "name": "songwei2017/lock",
+    "description": "the lock  for Hyperf",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "hyperf",
+        "v3.1"
+    ],
+    "authors": [
+    ],
+    "support": {
+
+    },
+    "require": {
+        "hyperf/config": "~3.1.0",
+        "hyperf/context": "~3.1.0",
+        "hyperf/support": "~3.1.0",
+    },
+    "suggest": {
+        "hyperf/redis": "Require this component for driver 'redis'."
+    },
+    "autoload": {
+        "psr-4": {
+            "Hyperf\\Lock\\": "src"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Hyperf\\Lock\\ConfigProvider"
+        }
+    }
+}
