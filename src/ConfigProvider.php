@@ -18,7 +18,7 @@ class ConfigProvider
                 [
                     'id' => 'config',
                     'description' => 'The configuration file of lock.',
-                    'source' => dirname(__DIR__) . '/publish/lock.php',
+                    'source' => __DIR__ . '/../publish/lock.php',
                     'destination' => BASE_PATH . '/config/autoload/lock.php',
                 ],
             ],
