@@ -16,6 +16,7 @@ use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Di\Annotation\AbstractAnnotation;
 use Hyperf\Di\Annotation\AnnotationCollector;
 use Hyperf\Lock\Annotation\Lock;
+use Hyperf\Lock\Exception\InvalidArgumentException;
 
 class AnnotationManager
 {
@@ -23,28 +24,24 @@ class AnnotationManager
     {
     }
 
-    public function getLockValue(string $className, string $method, array $arguments): array
+    public function getLockAnnotation(string $className, string $method, array $arguments): Lock
     {
         /** @var Lock $annotation */
         $annotation = $this->getAnnotation(Lock::class, $className, $method);
 
-        $key = $this->getFormattedKey($annotation->prefix, $arguments, $annotation->value);
-        $group = $annotation->group;
-        $ttl = $annotation->ttl ?? $this->config->get("cache.{$group}.ttl", 3600);
-        $annotation->skipCacheResults ??= (array) $this->config->get("cache.{$group}.skip_cache_results", []);
-
-        return [$key, $ttl + $this->getRandomOffset($annotation->offset), $group, $annotation];
+        return $annotation;
     }
 
 
+    
+    
     protected function getAnnotation(string $annotation, string $className, string $method): AbstractAnnotation
     {
         $collector = AnnotationCollector::get($className);
         $result = $collector['_m'][$method][$annotation] ?? null;
         if (! $result instanceof $annotation) {
-            throw new CacheException(sprintf('Annotation %s in %s:%s not exist.', $annotation, $className, $method));
+            throw new InvalidArgumentException(sprintf('Annotation %s in %s:%s not exist.', $annotation, $className, $method));
         }
-
         return $result;
     }
 

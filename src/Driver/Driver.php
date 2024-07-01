@@ -79,10 +79,10 @@ abstract class Driver implements DriverInterface
         return $result;
     }
 
-    public function block(int $seconds, ?callable $callback = null)
+    public function block(?callable $callback = null)
     {
         $starting = $this->currentTime();
-
+        $seconds = $this->getSeconds();
         while (! $this->acquire()) {
             \swoole\Coroutine::sleep($this->sleepSeconds );
             if ($this->currentTime() - $seconds >= $starting) {

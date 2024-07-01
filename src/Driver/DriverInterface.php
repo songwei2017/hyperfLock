@@ -4,7 +4,7 @@ interface DriverInterface
 {
     public function get(?callable $callback = null);
 
-    public function block(int $seconds, ?callable $callback = null);
+    public function block(?callable $callback = null);
 
     public function release(): bool;
 

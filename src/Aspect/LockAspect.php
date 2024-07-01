@@ -1,7 +1,7 @@
 <?php
 namespace Hyperf\Lock\Aspect;
 
-use Hyperf\Cache\AnnotationManager;
+use Hyperf\Lock\AnnotationManager;
 use Hyperf\Di\Annotation\AnnotationCollector;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
@@ -34,18 +34,18 @@ class LockAspect extends AbstractAspect
         $method = $proceedingJoinPoint->methodName;
         $arguments = $proceedingJoinPoint->arguments['keys'];
         $now = time();
-        $collector = AnnotationCollector::get($className);
-        var_dump($collector);
 
-        // 获取当前方法反射原型
-        /** @var \ReflectionMethod **/
-        $reflect = $proceedingJoinPoint->getReflectMethod();
-        var_dump($reflect);
-        // 获取调用方法时提交的参数
-        $arguments = $proceedingJoinPoint->getArguments(); // array
-        var_dump($arguments);
+        $lockAnnotation = $this->annotationManager->getLockAnnotation($className, $method, $arguments);
 
-        $result = $proceedingJoinPoint->process();
+        $driver = $this->manager->getDriver( $lockAnnotation->conf,$lockAnnotation->name,$lockAnnotation->seconds);
+
+        $result = $driver->{$lockAnnotation->method}(function ()use ($proceedingJoinPoint){
+            return $proceedingJoinPoint->process();
+        });
+
+
+
+
 
         // 在调用后进行某些处理
         return $result;
