@@ -7,15 +7,11 @@
         "hyperf",
         "v3.1"
     ],
-    "authors": [
-    ],
-    "support": {
-
-    },
+    "authors": [],
+    "support": [],
     "require": {
         "hyperf/config": "~3.1.0",
-        "hyperf/context": "~3.1.0",
-        "hyperf/support": "~3.1.0",
+        "hyperf/support": "~3.1.0"
     },
     "suggest": {
         "hyperf/redis": "Require this component for driver 'redis'."
