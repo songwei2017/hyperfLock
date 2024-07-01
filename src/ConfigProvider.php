@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sw2017\Lock;
+namespace Hyperf\Lock;
 
-use sw2017\lock\src\Aspect\LockAspect;
+use Hyperf\lock\src\Aspect\LockAspect;
 
 class ConfigProvider
 {

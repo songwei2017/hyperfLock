@@ -1,11 +1,11 @@
 <?php
 
-namespace Sw2017\Lock\Driver;
+namespace Hyperf\Lock\Driver;
 
 use FriendsOfHyperf\Lock\Driver\LuaScripts;
 use Hyperf\Redis\Redis;
 use Psr\Container\ContainerInterface;
-use sw2017\lock\src\Driver\Driver;
+use Hyperf\lock\src\Driver\Driver;
 
 class RedisDriver extends Driver {
 

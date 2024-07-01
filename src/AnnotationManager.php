@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sw2017\Lock;
+namespace Hyperf\Lock;
 
 use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Cache\Annotation\CacheAhead;
@@ -15,7 +15,7 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Di\Annotation\AbstractAnnotation;
 use Hyperf\Di\Annotation\AnnotationCollector;
-use Sw2017\Lock\Annotation\Lock;
+use Hyperf\Lock\Annotation\Lock;
 
 class AnnotationManager
 {

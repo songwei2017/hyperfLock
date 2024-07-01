@@ -1,5 +1,5 @@
 <?php
-namespace Sw2017\Lock\Annotation;
+namespace Hyperf\Lock\Annotation;
 
 use Attribute;
 use Hyperf\Di\Annotation\AbstractAnnotation;

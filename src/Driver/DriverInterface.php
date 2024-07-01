@@ -1,5 +1,5 @@
 <?php
-namespace  Sw2017\Lock\Driver;
+namespace  Hyperf\Lock\Driver;
 interface DriverInterface
 {
     public function get(?callable $callback = null);

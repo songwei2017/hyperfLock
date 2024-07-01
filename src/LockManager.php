@@ -1,20 +1,12 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
- */
 
-namespace Sw2017\Lock;
+namespace Hyperf\Lock;
 
-use Sw2017\Lock\Driver\DriverInterface;
-use Sw2017\Lock\Driver\RedisDriver;
-use sw2017\lock\src\Exception\InvalidArgumentException;
+use Hyperf\Lock\Driver\DriverInterface;
+use Hyperf\Lock\Driver\RedisDriver;
+use Hyperf\lock\src\Exception\InvalidArgumentException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use function Hyperf\Support\make;

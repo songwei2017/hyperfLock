@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sw2017\Lock;
+namespace Hyperf\Lock;
 
-use Sw2017\Lock\Driver\DriverInterface;
+use Hyperf\Lock\Driver\DriverInterface;
 
 class Lock
 {

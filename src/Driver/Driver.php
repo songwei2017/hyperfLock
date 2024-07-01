@@ -1,19 +1,11 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
- */
 
-namespace Sw2017\Lock\Driver;
+namespace Hyperf\Lock\Driver;
 
 use Hyperf\Stringable\Str;
-use Sw2017\Lock\Exception\LockTimeoutException;
+use Hyperf\Lock\Exception\LockTimeoutException;
 use Hyperf\Support\Traits\InteractsWithTime;
 use Psr\Container\ContainerInterface;
 
