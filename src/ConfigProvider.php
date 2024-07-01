@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hyperf\Lock;
 
-use Hyperf\lock\src\Aspect\LockAspect;
+use Hyperf\Lock\Aspect\LockAspect;
 
 class ConfigProvider
 {

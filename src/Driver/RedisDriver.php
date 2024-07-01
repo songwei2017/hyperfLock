@@ -2,15 +2,14 @@
 
 namespace Hyperf\Lock\Driver;
 
-use FriendsOfHyperf\Lock\Driver\LuaScripts;
 use Hyperf\Redis\Redis;
 use Psr\Container\ContainerInterface;
-use Hyperf\lock\src\Driver\Driver;
+use Hyperf\Lock\Driver\Driver;
 
 class RedisDriver extends Driver {
 
     protected Redis $redis;
-    protected $name = 0;
+    protected $name = "";
 
     public function __construct(ContainerInterface $container, array $config,$name="",$seconds = 0)
     {

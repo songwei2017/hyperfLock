@@ -6,7 +6,7 @@ namespace Hyperf\Lock;
 
 use Hyperf\Lock\Driver\DriverInterface;
 use Hyperf\Lock\Driver\RedisDriver;
-use Hyperf\lock\src\Exception\InvalidArgumentException;
+use Hyperf\Lock\Exception\InvalidArgumentException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use function Hyperf\Support\make;
