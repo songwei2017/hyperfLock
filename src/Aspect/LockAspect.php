@@ -30,11 +30,10 @@ class LockAspect extends AbstractAspect
         $className = $proceedingJoinPoint->className;
         $method = $proceedingJoinPoint->methodName;
         $arguments = $proceedingJoinPoint->arguments['keys'];
-        $now = time();
+        
+        [$lockAnnotation,$name] = $this->annotationManager->getLockAnnotation($className, $method, $arguments);
 
-        $lockAnnotation = $this->annotationManager->getLockAnnotation($className, $method, $arguments);
-
-        $driver = $this->manager->getDriver( $lockAnnotation->conf,$lockAnnotation->name,$lockAnnotation->seconds);
+        $driver = $this->manager->getDriver( $lockAnnotation->conf,$lockAnnotation->name.$name,$lockAnnotation->seconds);
 
         $result = $driver->{$lockAnnotation->method}(function ()use ($proceedingJoinPoint){
             return $proceedingJoinPoint->process();
