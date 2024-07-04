@@ -1,25 +1,22 @@
 <?php
-
-declare(strict_types=1);
-/**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
- */
-
 namespace Hyperf\Lock\Aspect;
 
+use Hyperf\Lock\AnnotationManager;
+use Hyperf\Di\Annotation\AnnotationCollector;
+use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\Lock\Annotation\Lock;
-use Hyperf\Lock\AnnotationManager;
 use Hyperf\Lock\LockManager;
 
 class LockAspect extends AbstractAspect
 {
+
+    public function __construct(protected LockManager $manager, protected AnnotationManager $annotationManager)
+    {
+    }
+
+
     // 要切入的类或 Trait，可以多个，亦可通过 :: 标识到具体的某个方法，通过 * 可以模糊匹配
     public array $classes = [];
 
@@ -28,21 +25,20 @@ class LockAspect extends AbstractAspect
         Lock::class,
     ];
 
-    public function __construct(protected LockManager $manager, protected AnnotationManager $annotationManager)
-    {
-    }
-
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
         $className = $proceedingJoinPoint->className;
         $method = $proceedingJoinPoint->methodName;
         $arguments = $proceedingJoinPoint->arguments['keys'];
+        $now = time();
 
-        [$lockAnnotation,$name] = $this->annotationManager->getLockAnnotation($className, $method, $arguments);
-        $driver = $this->manager->getDriver($lockAnnotation->conf, $lockAnnotation->name . $name, $lockAnnotation->seconds);
+        $lockAnnotation = $this->annotationManager->getLockAnnotation($className, $method, $arguments);
 
-        return $driver->{$lockAnnotation->method}(function () use ($proceedingJoinPoint) {
+        $driver = $this->manager->getDriver( $lockAnnotation->conf,$lockAnnotation->name,$lockAnnotation->seconds);
+
+        $result = $driver->{$lockAnnotation->method}(function ()use ($proceedingJoinPoint){
             return $proceedingJoinPoint->process();
         });
+        return $result;
     }
 }
