@@ -1,16 +1,17 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace Hyperf\Lock;
 
-use Hyperf\Cache\Annotation\Cacheable;
-use Hyperf\Cache\Annotation\CacheAhead;
-use Hyperf\Cache\Annotation\CacheEvict;
-use Hyperf\Cache\Annotation\CachePut;
-use Hyperf\Cache\Annotation\FailCache;
-use Hyperf\Cache\Exception\CacheException;
-use Hyperf\Cache\Helper\StringHelper;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -24,17 +25,22 @@ class AnnotationManager
     {
     }
 
-    public function getLockAnnotation(string $className, string $method, array $arguments): Lock
+    public function getLockAnnotation(string $className, string $method, array $arguments): array
     {
         /** @var Lock $annotation */
         $annotation = $this->getAnnotation(Lock::class, $className, $method);
+        $name = '';
+        if ($annotation->arg) {
+            foreach ($annotation->arg as $arg) {
+                if ($arg && isset($arguments[$arg])) {
+                    $name .= ':' . $arg . '_' . $arguments[$arg];
+                }
+            }
+        }
 
-        return $annotation;
+        return [$annotation, $name];
     }
 
-
-    
-    
     protected function getAnnotation(string $annotation, string $className, string $method): AbstractAnnotation
     {
         $collector = AnnotationCollector::get($className);
@@ -44,6 +50,4 @@ class AnnotationManager
         }
         return $result;
     }
-
-
 }

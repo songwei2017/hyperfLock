@@ -1,22 +1,25 @@
 <?php
+
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace Hyperf\Lock\Aspect;
 
-use Hyperf\Lock\AnnotationManager;
-use Hyperf\Di\Annotation\AnnotationCollector;
-use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\Lock\Annotation\Lock;
+use Hyperf\Lock\AnnotationManager;
 use Hyperf\Lock\LockManager;
 
 class LockAspect extends AbstractAspect
 {
-
-    public function __construct(protected LockManager $manager, protected AnnotationManager $annotationManager)
-    {
-    }
-
-
     // 要切入的类或 Trait，可以多个，亦可通过 :: 标识到具体的某个方法，通过 * 可以模糊匹配
     public array $classes = [];
 
@@ -25,29 +28,21 @@ class LockAspect extends AbstractAspect
         Lock::class,
     ];
 
+    public function __construct(protected LockManager $manager, protected AnnotationManager $annotationManager)
+    {
+    }
+
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
-        // 切面切入后，执行对应的方法会由此来负责
-        // $proceedingJoinPoint 为连接点，通过该类的 process() 方法调用原方法并获得结果
-        // 在调用前进行某些处理
         $className = $proceedingJoinPoint->className;
         $method = $proceedingJoinPoint->methodName;
         $arguments = $proceedingJoinPoint->arguments['keys'];
-        $now = time();
 
-        $lockAnnotation = $this->annotationManager->getLockAnnotation($className, $method, $arguments);
+        [$lockAnnotation,$name] = $this->annotationManager->getLockAnnotation($className, $method, $arguments);
+        $driver = $this->manager->getDriver($lockAnnotation->conf, $lockAnnotation->name . $name, $lockAnnotation->seconds);
 
-        $driver = $this->manager->getDriver( $lockAnnotation->conf,$lockAnnotation->name,$lockAnnotation->seconds);
-
-        $result = $driver->{$lockAnnotation->method}(function ()use ($proceedingJoinPoint){
+        return $driver->{$lockAnnotation->method}(function () use ($proceedingJoinPoint) {
             return $proceedingJoinPoint->process();
         });
-
-
-
-
-
-        // 在调用后进行某些处理
-        return $result;
     }
 }

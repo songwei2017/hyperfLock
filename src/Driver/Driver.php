@@ -1,13 +1,22 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace Hyperf\Lock\Driver;
 
-use Hyperf\Stringable\Str;
 use Hyperf\Lock\Exception\LockTimeoutException;
+use Hyperf\Stringable\Str;
 use Hyperf\Support\Traits\InteractsWithTime;
 use Psr\Container\ContainerInterface;
+use swoole\Coroutine;
 
 abstract class Driver implements DriverInterface
 {
@@ -27,12 +36,14 @@ abstract class Driver implements DriverInterface
      * @var string
      */
     protected $prefix;
+
     protected $owner;
+
     protected $seconds;
 
     protected $sleepSeconds = 0.01;
 
-    public function __construct(ContainerInterface $container, array $config,$name = '',$seconds = 0)
+    public function __construct(ContainerInterface $container, array $config, $name = '', $seconds = 0)
     {
         $this->container = $container;
         $this->config = $config;
@@ -42,26 +53,23 @@ abstract class Driver implements DriverInterface
         $this->name = $name;
     }
 
-
     abstract public function acquire(): bool;
 
-    abstract function release(): bool;
+    abstract public function release(): bool;
 
+    abstract public function forceRelease(): void;
 
-    abstract function forceRelease(): void;
-
-    abstract protected function getCurrentOwner();
-
-
-    function getKey(): string
+    public function getKey(): string
     {
         return $this->prefix . $this->name;
     }
-    function getOwner(): string
+
+    public function getOwner(): string
     {
         return $this->owner;
     }
-    function getSeconds(): int
+
+    public function getSeconds(): int
     {
         return $this->seconds;
     }
@@ -84,9 +92,9 @@ abstract class Driver implements DriverInterface
         $starting = $this->currentTime();
         $seconds = $this->getSeconds();
         while (! $this->acquire()) {
-            \swoole\Coroutine::sleep($this->sleepSeconds );
+            Coroutine::sleep($this->sleepSeconds);
             if ($this->currentTime() - $seconds >= $starting) {
-                throw new LockTimeoutException("等待锁超时");
+                throw new LockTimeoutException('等待锁超时');
             }
         }
 
@@ -101,4 +109,5 @@ abstract class Driver implements DriverInterface
         return true;
     }
 
+    abstract protected function getCurrentOwner();
 }
